@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de LEDs ESP32</title>
+    <style>
+        /* Centraliza o conteúdo */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Estiliza o título */
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Contêiner para grupos de botões */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Estiliza os botões */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover dos botões */
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Controle de LEDs com MQTT</h2>
+    <div class="button-group">
+        <button onclick="toggleLED(0, '1')">Ligar LED 0</button>
+        <button onclick="toggleLED(0, '0')">Desligar LED 0</button>
+    </div>
+    <div class="button-group">
+        <button onclick="toggleLED(1, '1')">Ligar LED 1</button>
+        <button onclick="toggleLED(1, '0')">Desligar LED 1</button>
+    </div>
+    <div class="button-group">
+        <button onclick="toggleLED(2, '1')">Ligar LED 2</button>
+        <button onclick="toggleLED(2, '0')">Desligar LED 2</button>
+    </div>
+    <div class="button-group">
+        <button onclick="toggleLED(3, '1')">Ligar LED 3</button>
+        <button onclick="toggleLED(3, '0')">Desligar LED 3</button>
+    </div>
+    <div class="button-group">
+        <button onclick="toggleLED(4, '1')">Ligar LED 4</button>
+        <button onclick="toggleLED(4, '0')">Desligar LED 4</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script>
+        const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "web-client-" + parseInt(Math.random() * 100, 10));
+        
+        client.onConnectionLost = function(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("Connection Lost:" + responseObject.errorMessage);
+            }
+        };
+
+        client.connect({ onSuccess: onConnect });
+        
+        function onConnect() {
+            console.log("Conectado ao broker MQTT");
+        }
+
+        function toggleLED(led, state) {
+            const topic = "led" + led;
+            const message = new Paho.MQTT.Message(state);
+            message.destinationName = topic;
+            client.send(message);
+            console.log(`Enviado para ${topic}: ${state}`);
+        }
+    </script>
+</body>
+</html>
