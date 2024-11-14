@@ -69,7 +69,11 @@
         <button onclick="toggleLED(4, '1')">Ligar LED 4</button>
         <button onclick="toggleLED(4, '0')">Desligar LED 4</button>
     </div>
-
+    <script src="<https://unpkg.com/mqtt/dist/mqtt.min.js>"></script>
+    <script>
+      // An mqtt variable will be initialized globally
+      console.log(mqtt)
+    </script>
     <script>
         const mqtt = require('mqtt')
         const client = mqtt.connect('mqtt://broker.emqx.io:1883', {
