@@ -71,12 +71,28 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
     <script>
         //const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "web-client-" + parseInt(Math.random() * 100, 10));
         //const client = new Paho.MQTT.Client("broker.emqx.io", 1883, "web-client-" + parseInt(Math.random() * 100, 10));
-        const client = new Paho.MQTT.Client("wss://broker.emqx.io:8084/mqtt", "web-client-" + parseInt(Math.random() * 100, 10));
+        //const client = new Paho.MQTT.Client("wss://broker.emqx.io:8084/mqtt", "web-client-" + parseInt(Math.random() * 100, 10));
+        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+            clientId: 'web-client-' + Math.random().toString(16).substr(2, 8),
+            clean: true,
+            connectTimeout: 4000,
+            reconnectPeriod: 1000,
+        });
         
-        client.onConnectionLost = function(responseObject) {
+        client.on('connect', function () {
+            console.log('Conectado ao broker MQTT com WSS');
+        });
+        
+        client.on('error', function (error) {
+            console.log('Erro de conexão:', error);
+        });
+
+        /*client.onConnectionLost = function(responseObject) {
             if (responseObject.errorCode !== 0) {
                 console.log("Connection Lost:" + responseObject.errorMessage);
             }
@@ -86,7 +102,7 @@
         
         function onConnect() {
             console.log("Conectado ao broker MQTT");
-        }
+        }*/
 
         function toggleLED(led, state) {
             const topic = "led" + led;
