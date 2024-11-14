@@ -73,8 +73,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script>
         //const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "web-client-" + parseInt(Math.random() * 100, 10));
-        const client = new Paho.MQTT.Client("broker.emqx.io", 1883, "web-client-" + parseInt(Math.random() * 100, 10));
-
+        //const client = new Paho.MQTT.Client("broker.emqx.io", 1883, "web-client-" + parseInt(Math.random() * 100, 10));
+        const client = new Paho.MQTT.Client("wss://broker.emqx.io:8084/mqtt", "web-client-" + parseInt(Math.random() * 100, 10));
         
         client.onConnectionLost = function(responseObject) {
             if (responseObject.errorCode !== 0) {
