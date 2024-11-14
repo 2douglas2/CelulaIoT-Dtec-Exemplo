@@ -94,13 +94,16 @@
         function toggleLED(led, state) {
             const topic = 'led' + led;
             const message = state;
-            client.publish(topic, message, (error) => {
-                if (error) {
-                    console.error('Falha ao enviar a mensagem:', error);
-                } else {
-                    console.log(`Enviado para ${topic}: ${state}`);
-                }
-            });
+            client.on('connect', function () {
+                console.log('Connected')
+                // Subscribe to a topic
+                client.subscribe(topic, function (err) {
+                    if (!err) {
+                    // Publish a message to a topic
+                    client.publish(topic, state)
+                    }
+                })
+            })
         }
     </script>
 </body>
