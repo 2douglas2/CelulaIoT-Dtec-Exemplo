@@ -70,51 +70,27 @@
         <button onclick="toggleLED(4, '0')">Desligar LED 4</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-
     <script>
-        //const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "web-client-" + parseInt(Math.random() * 100, 10));
-        //const client = new Paho.MQTT.Client("broker.emqx.io", 1883, "web-client-" + parseInt(Math.random() * 100, 10));
-        //const client = new Paho.MQTT.Client("wss://broker.emqx.io:8084/mqtt", "web-client-" + parseInt(Math.random() * 100, 10));
-
-        /*client.onConnectionLost = function(responseObject) {
-            if (responseObject.errorCode !== 0) {
-                console.log("Connection Lost:" + responseObject.errorMessage);
-            }
-        };
-
-        client.connect({ onSuccess: onConnect });
-        
-        function onConnect() {
-            console.log("Conectado ao broker MQTT");
-        }*/
-
-        
-        // Configura o cliente MQTT usando WSS
-        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        const mqtt = require('mqtt')
+        const client = mqtt.connect('mqtt://broker.emqx.io:1883', {
             clientId: 'web-client-' + Math.random().toString(16).substr(2, 8),
             clean: true,
             connectTimeout: 10000,  // 10 segundos de timeout para conexão
             reconnectPeriod: 1000,  // Reconecta automaticamente a cada 1 segundo em caso de falha
         });
 
-        // Evento de conexão bem-sucedida
         client.on('connect', function () {
             console.log('Conectado ao broker MQTT com WSS');
         });
 
-        // Evento de erro na conexão
         client.on('error', function (error) {
             console.error('Erro de conexão:', error);
         });
 
-        // Evento quando a conexão é encerrada
         client.on('close', function () {
             console.log('A conexão com o broker foi encerrada');
         });
 
-        // Função para controlar os LEDs enviando mensagens MQTT
         function toggleLED(led, state) {
             const topic = 'led' + led;
             const message = state;
